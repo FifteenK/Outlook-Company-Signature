@@ -23,6 +23,8 @@ Signature content is served from Cloudflare Pages, meaning it can be updated wit
 ├── commands.js        # Event handler — hosted on Cloudflare Pages
 ├── signature.html     # HTML signature fragment — hosted on Cloudflare Pages
 ├── _headers           # Cloudflare Pages CORS header config
+├── index.html         # One-page project site (for GitHub Pages)
+├── .nojekyll          # Serve files as-is on GitHub Pages
 └── README.md
 ```
 

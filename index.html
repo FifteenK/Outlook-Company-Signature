@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Outlook Auto Signature POC</title>
+  <meta name="description" content="An open-source Outlook add-in that adds one consistent company sign-off, with logo, address, disclaimer and campaign banner, to every email your team sends." />
+  <link rel="canonical" href="https://email-signature-poc.github.io/" />
+  <link rel="icon" type="image/png" href="assets/icon-64.png" />
+  <meta property="og:title" content="Outlook Auto Signature POC" />
+  <meta property="og:description" content="An open-source Outlook add-in that adds one consistent company sign-off to every email your team sends." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://email-signature-poc.github.io/" />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-soft: #f5f7fa;
+      --text: #1a1f29;
+      --muted: #5b6474;
+      --border: #e3e7ee;
+      --accent: #0067b8;
+      --accent-soft: #e8f1fb;
+      --code-bg: #f0f2f5;
+      --card: #ffffff;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #12151b;
+        --bg-soft: #191d25;
+        --text: #e7eaf0;
+        --muted: #9aa3b2;
+        --border: #2a303b;
+        --accent: #5aa9ff;
+        --accent-soft: #1b2a3d;
+        --code-bg: #1f242d;
+        --card: #191d25;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    a { color: var(--accent); }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 0 16px; }
+    header.hero { padding: 72px 0 48px; border-bottom: 1px solid var(--border); }
+    .eyebrow {
+      display: inline-block; font-size: 13px; font-weight: 600; letter-spacing: .04em;
+      text-transform: uppercase; color: var(--accent); background: var(--accent-soft);
+      padding: 4px 10px; border-radius: 999px; margin-bottom: 16px;
+    }
+    h1 { font-size: clamp(32px, 6vw, 48px); line-height: 1.1; margin: 0 0 16px; letter-spacing: -0.02em; }
+    .lede { font-size: 19px; color: var(--muted); margin: 0 0 28px; max-width: 640px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 8px;
+      font-weight: 600; text-decoration: none; border: 1px solid var(--border); color: var(--text);
+    }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    @media (prefers-color-scheme: dark) { .btn.primary { color: #0b1420; } }
+    section { padding: 48px 0; border-bottom: 1px solid var(--border); }
+    h2 { font-size: 24px; margin: 0 0 20px; letter-spacing: -0.01em; }
+    ol.steps { list-style: none; counter-reset: s; padding: 0; margin: 0; display: grid; gap: 14px; }
+    ol.steps li { counter-increment: s; position: relative; padding-left: 44px; }
+    ol.steps li::before {
+      content: counter(s); position: absolute; left: 0; top: 0; width: 30px; height: 30px; border-radius: 50%;
+      background: var(--accent-soft); color: var(--accent); font-weight: 700; display: grid; place-items: center; font-size: 14px;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .9em;
+      background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+    .card h3 { margin: 0 0 6px; font-size: 16px; }
+    .card p { margin: 0; color: var(--muted); font-size: 15px; }
+    .preview {
+      background: #ffffff; border: 1px solid var(--border); border-radius: 10px; padding: 24px;
+      overflow-x: auto; color: #333333;
+    }
+    .preview-caption { color: var(--muted); font-size: 14px; margin-top: 10px; }
+    table.files { width: 100%; border-collapse: collapse; font-size: 15px; }
+    table.files td { padding: 10px 8px; border-top: 1px solid var(--border); vertical-align: top; }
+    table.files td:first-child { white-space: nowrap; width: 1%; }
+    .note { background: var(--bg-soft); border-left: 3px solid var(--accent); padding: 14px 16px; border-radius: 0 8px 8px 0; color: var(--muted); font-size: 15px; }
+    footer { padding: 32px 0 56px; color: var(--muted); font-size: 14px; }
+    footer a { color: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <header class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Open source · MIT</span>
+      <h1>One company sign-off, on every email your team sends</h1>
+      <p class="lede">An event-based Office.js add-in that adds your company's sign-off block to every new email: logo, address, website, social links, disclaimer and an optional campaign banner. Everyone gets the same block, and you change it for the whole team by editing one file.</p>
+      <div class="actions">
+        <a class="btn primary" href="https://github.com/nathanpitman/Signature-POC">View on GitHub</a>
+        <a class="btn" href="https://github.com/nathanpitman/Signature-POC#deploy">Deploy guide</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="wrap">
+        <h2>How it works</h2>
+        <ol class="steps">
+          <li>A user opens a new compose window in Outlook.</li>
+          <li>Outlook fires the <code>OnNewMessageCompose</code> event.</li>
+          <li><code>commands.js</code> fetches <code>signature.html</code> from your static host.</li>
+          <li>The signature is inserted with <code>setSignatureAsync()</code>, falling back to <code>body.setAsync()</code> on older builds.</li>
+        </ol>
+        <p>Because the sign-off is fetched on each compose, you can change it by editing one file and pushing. Nobody needs to update their own Outlook settings, and you don't need to change the manifest or sideload the add-in again.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Who it's for</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>A consistent sign-off</h3>
+            <p>Every email from the business ends with the same logo, contact details and legal disclaimer, however many people are sending.</p>
+          </div>
+          <div class="card">
+            <h3>Campaigns in every inbox</h3>
+            <p>Swap in a seasonal sale, event or award banner once and it appears on everyone's emails straight away. Take it out just as easily.</p>
+          </div>
+          <div class="card">
+            <h3>Small teams, not one person</h3>
+            <p>If you're the only person sending, pasting a template into your Outlook signature settings does the same job. This is worth it once there's a team to keep in line.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>What the sign-off looks like</h2>
+        <div class="preview">
+          <div style="font-family: Arial, sans-serif; font-size: 14px; color: #888888; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px dashed #dddddd;">
+            Kind regards,<br/>
+            <strong style="color: #555555;">Sam Taylor</strong><br/>
+            Office Manager
+            <div style="font-size: 12px; margin-top: 6px; font-style: italic;">Each person types their own name here. Everything below is added automatically.</div>
+          </div>
+          <table
+            style="
+              font-family: Arial, Helvetica, sans-serif;
+              font-size: 12px;
+              color: #444444;
+              border-collapse: collapse;
+              width: 560px;
+              max-width: 100%;
+            "
+            cellpadding="0"
+            cellspacing="0"
+            role="presentation"
+          >
+            <!-- Logo -->
+            <tr>
+              <td style="padding: 0 0 12px 0;">
+                <a href="https://acme.example" style="text-decoration: none;">
+                  <img
+                    src="assets/logo.png"
+                    alt="Acme Co."
+                    width="160"
+                    height="40"
+                    style="display: block; border: 0;"
+                  />
+                </a>
+              </td>
+            </tr>
+
+            <!-- Company details -->
+            <tr>
+              <td style="border-left: 3px solid #0B5CAD; padding: 2px 0 2px 12px; line-height: 1.7;">
+                <div style="font-size: 14px; font-weight: bold; color: #14213D;">Acme Co. Ltd</div>
+                <div>12 High Street, Exampleton, EX1 2MP</div>
+                <div>
+                  <a href="tel:+441234567890" style="color: #0B5CAD; text-decoration: none;">+44 1234 567 890</a>
+                  &nbsp;·&nbsp;
+                  <a href="https://acme.example" style="color: #0B5CAD; text-decoration: none;">acme.example</a>
+                </div>
+                <!-- Social links -->
+                <div>
+                  <a href="https://www.linkedin.com/company/acme" style="color: #0B5CAD; text-decoration: none;">LinkedIn</a>
+                  &nbsp;·&nbsp;
+                  <a href="https://www.instagram.com/acme" style="color: #0B5CAD; text-decoration: none;">Instagram</a>
+                  &nbsp;·&nbsp;
+                  <a href="https://www.facebook.com/acme" style="color: #0B5CAD; text-decoration: none;">Facebook</a>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Optional: seasonal / campaign banner. Swap the image and link per campaign, or delete this row. -->
+            <tr>
+              <td style="padding: 14px 0 0 0;">
+                <a href="https://acme.example/sale" style="text-decoration: none;">
+                  <img
+                    src="assets/banner.png"
+                    alt="Winter sale: 20% off everything until 31 January. Shop now."
+                    width="560"
+                    height="100"
+                    style="display: block; border: 0; max-width: 100%; height: auto;"
+                  />
+                </a>
+              </td>
+            </tr>
+
+            <!-- Disclaimer -->
+            <tr>
+              <td style="padding-top: 12px;">
+                <div style="font-size: 10px; line-height: 1.5; color: #999999; border-top: 1px solid #eeeeee; padding-top: 8px;">
+                  Acme Co. Ltd is registered in England and Wales, company no. 01234567. This email and any attachments are confidential. If you are not the intended recipient, please notify the sender and delete this message.
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <p class="preview-caption">The block below the dashed line is the sample <code>signature.html</code> from the repo. Replace the logo, details, banner and disclaimer with your own before you deploy.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Where it runs</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Windows</h3>
+            <p>New Outlook for Windows, and classic Outlook on Windows 10 version 1903 or later.</p>
+          </div>
+          <div class="card">
+            <h3>Mac</h3>
+            <p>New Outlook for Mac only. Classic Outlook for Mac doesn't support event-based activation.</p>
+          </div>
+          <div class="card">
+            <h3>Web</h3>
+            <p>Outlook on the web, signed in with a Microsoft 365 account.</p>
+          </div>
+        </div>
+        <p class="note">Classic Outlook for Windows builds older than Version 2403 can't run the <code>async</code>/<code>await</code> code in <code>commands.js</code>, so the signature won't appear there. The <a href="https://github.com/nathanpitman/Signature-POC#requirements">README</a> explains the workaround.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>What's in the repo</h2>
+        <table class="files">
+          <tr><td><code>manifest.xml</code></td><td>The add-in manifest. You sideload it into Outlook.</td></tr>
+          <tr><td><code>commands.js</code></td><td>The event handler that fetches and inserts the signature.</td></tr>
+          <tr><td><code>signature.html</code></td><td>The company sign-off block. Edit this to change it for everyone.</td></tr>
+          <tr><td><code>_headers</code></td><td>CORS headers so Outlook can fetch the files.</td></tr>
+          <tr><td><code>skills/</code></td><td>Notes for extending the POC: per-user signatures, templating and caching.</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Get started</h2>
+        <ol class="steps">
+          <li>Fork or clone the repository.</li>
+          <li>Edit <code>signature.html</code> with your company logo, name, address, website, social links and disclaimer. Add a campaign banner if you want one.</li>
+          <li>Deploy the repo as a static site. The guide uses Cloudflare Pages on the free plan.</li>
+          <li>Replace the <code>YOUR_DOMAIN</code> placeholders in <code>manifest.xml</code> and <code>commands.js</code>, and give the manifest a fresh GUID.</li>
+          <li>In Outlook, go to <strong>Insert → Add-ins → My Add-ins → Add a Custom Add-in → Add from File</strong> and pick your <code>manifest.xml</code>.</li>
+        </ol>
+        <p>The <a href="https://github.com/nathanpitman/Signature-POC#deploy">full deploy guide</a> and <a href="https://github.com/nathanpitman/Signature-POC#troubleshooting">troubleshooting notes</a> are in the README.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>Is DIY right for you?</h2>
+        <p>This is the DIY end of the spectrum: one sign-off block for the whole team, nothing to run, and it's yours once you fork it. If you need different signatures per person or department, an admin dashboard or central deployment, have a look at a commercial platform such as <a href="https://sighq.app">SigHQ</a> to see what that space looks like.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      MIT licensed · <a href="https://github.com/nathanpitman/Signature-POC">Source on GitHub</a>
+    </div>
+  </footer>
+
+</body>
+</html>

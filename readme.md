@@ -1,6 +1,10 @@
 # Outlook Auto Signature Add-in POC
 
-An event-based Office.js add-in that automatically injects a remotely-managed HTML signature whenever a user opens a new compose window in Outlook. No task pane, no user interaction — it just works silently in the background.
+An event-based Office.js add-in that automatically adds a remotely-managed company sign-off block whenever a user opens a new compose window in Outlook. No task pane, no user interaction — it just works silently in the background.
+
+The block is the same for everyone: company logo, name, address, phone, website, social links, an optional campaign banner, and a legal disclaimer. Each person types their own name above it as they write. That gives a small business one consistent sign-off it controls centrally — swap in a seasonal sale banner, update the address or change the disclaimer, and every email from the team picks it up on the next compose.
+
+If you're the only person sending email, this achieves nothing over pasting a template into your own Outlook signature settings. It earns its keep once there's a team to keep consistent.
 
 Signature content is served from Cloudflare Pages, meaning it can be updated without touching the add-in or re-sideloading the manifest.
 
@@ -21,7 +25,8 @@ Signature content is served from Cloudflare Pages, meaning it can be updated wit
 ```
 ├── manifest.xml       # Add-in manifest — sideloaded locally into Outlook
 ├── commands.js        # Event handler — hosted on Cloudflare Pages
-├── signature.html     # HTML signature fragment — hosted on Cloudflare Pages
+├── signature.html     # Company sign-off block — hosted on Cloudflare Pages
+├── assets/            # Logo and campaign banner used by signature.html
 ├── _headers           # Cloudflare Pages CORS header config
 ├── index.html         # One-page project site (for GitHub Pages)
 ├── .nojekyll          # Serve files as-is on GitHub Pages
@@ -56,7 +61,15 @@ cd YOUR_REPO_NAME
 
 ### 2. Customise the signature
 
-Edit `signature.html` with your real name, title, contact details, and logo URL.
+Edit `signature.html` with your company's details. It's a company sign-off block, not a personal signature — nobody's name goes in it:
+
+- **Logo** — replace `assets/logo.png` (shown at 160 × 40, export at 320 × 80 for sharp rendering)
+- **Company name, address, phone and website**
+- **Social links** — LinkedIn, Instagram and Facebook are included as text links; add or remove as needed
+- **Campaign banner** (optional) — replace `assets/banner.png` (shown at 560 × 100, export at 1120 × 200) and its link, or delete that table row
+- **Disclaimer** — your registered company details and confidentiality wording
+
+All image and link URLs must be absolute HTTPS URLs.
 
 ### 3. Deploy to Cloudflare Pages
 
@@ -106,7 +119,7 @@ The menu path above is the same across new Outlook for Mac, Outlook on Windows, 
 
 ## Updating the Signature
 
-Edit `signature.html` and push to `main`. Cloudflare Pages redeploys in seconds. No manifest changes, no re-sideloading required.
+Edit `signature.html` (or replace `assets/banner.png` for a new campaign) and push to `main`. Cloudflare Pages redeploys in seconds and everyone's next email uses the new block. No manifest changes, no re-sideloading required.
 
 -----
 
@@ -146,7 +159,7 @@ This is a proof of concept. The sideloaded manifest approach works for developme
 
 ## About
 
-This is the DIY end of the spectrum: one global signature, no moving parts, fork it and it's yours. If you're weighing that against a commercial signature management platform instead — per-user signatures, an admin dashboard, centralised deployment — [SigHQ](https://sighq.app) is a good place to see what that space looks like.
+This is the DIY end of the spectrum: one company sign-off for the whole team, no moving parts, fork it and it's yours. If you're weighing that against a commercial signature management platform instead — per-user signatures, an admin dashboard, centralised deployment — [SigHQ](https://sighq.app) is a good place to see what that space looks like.
 
 -----
 

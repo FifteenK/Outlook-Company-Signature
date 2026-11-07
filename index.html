@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Outlook Auto Signature POC</title>
-  <meta name="description" content="An open-source Outlook add-in that injects a remotely managed HTML signature every time you start a new email. No task pane, no clicks." />
+  <meta name="description" content="An open-source Outlook add-in that adds one consistent company sign-off, with logo, address, disclaimer and campaign banner, to every email your team sends." />
   <link rel="canonical" href="https://email-signature-poc.github.io/" />
   <link rel="icon" type="image/png" href="assets/icon-64.png" />
   <meta property="og:title" content="Outlook Auto Signature POC" />
-  <meta property="og:description" content="An open-source Outlook add-in that injects a remotely managed HTML signature every time you start a new email." />
+  <meta property="og:description" content="An open-source Outlook add-in that adds one consistent company sign-off to every email your team sends." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://email-signature-poc.github.io/" />
   <style>
@@ -95,8 +95,8 @@
   <header class="hero">
     <div class="wrap">
       <span class="eyebrow">Open source · MIT</span>
-      <h1>Outlook signatures that set themselves</h1>
-      <p class="lede">An event-based Office.js add-in that drops a remotely managed HTML signature into every new email. There is no task pane and no button to press. You open a compose window and the signature is already there.</p>
+      <h1>One company sign-off, on every email your team sends</h1>
+      <p class="lede">An event-based Office.js add-in that adds your company's sign-off block to every new email: logo, address, website, social links, disclaimer and an optional campaign banner. Everyone gets the same block, and you change it for the whole team by editing one file.</p>
       <div class="actions">
         <a class="btn primary" href="https://github.com/nathanpitman/Signature-POC">View on GitHub</a>
         <a class="btn" href="https://github.com/nathanpitman/Signature-POC#deploy">Deploy guide</a>
@@ -114,40 +114,115 @@
           <li><code>commands.js</code> fetches <code>signature.html</code> from your static host.</li>
           <li>The signature is inserted with <code>setSignatureAsync()</code>, falling back to <code>body.setAsync()</code> on older builds.</li>
         </ol>
-        <p>Because the signature is fetched on each compose, you can change it by editing one file and pushing. You don't need to change the manifest or sideload the add-in again.</p>
+        <p>Because the sign-off is fetched on each compose, you can change it by editing one file and pushing. Nobody needs to update their own Outlook settings, and you don't need to change the manifest or sideload the add-in again.</p>
       </div>
     </section>
 
     <section>
       <div class="wrap">
-        <h2>What the signature looks like</h2>
+        <h2>Who it's for</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>A consistent sign-off</h3>
+            <p>Every email from the business ends with the same logo, contact details and legal disclaimer, however many people are sending.</p>
+          </div>
+          <div class="card">
+            <h3>Campaigns in every inbox</h3>
+            <p>Swap in a seasonal sale, event or award banner once and it appears on everyone's emails straight away. Take it out just as easily.</p>
+          </div>
+          <div class="card">
+            <h3>Small teams, not one person</h3>
+            <p>If you're the only person sending, pasting a template into your Outlook signature settings does the same job. This is worth it once there's a team to keep in line.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2>What the sign-off looks like</h2>
         <div class="preview">
-          <table style="font-family: Arial, sans-serif; font-size: 13px; color: #333333; border-collapse: collapse; width: 420px;" cellpadding="0" cellspacing="0">
+          <div style="font-family: Arial, sans-serif; font-size: 14px; color: #888888; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px dashed #dddddd;">
+            Kind regards,<br/>
+            <strong style="color: #555555;">Sam Taylor</strong><br/>
+            Office Manager
+            <div style="font-size: 12px; margin-top: 6px; font-style: italic;">Each person types their own name here. Everything below is added automatically.</div>
+          </div>
+          <table
+            style="
+              font-family: Arial, Helvetica, sans-serif;
+              font-size: 12px;
+              color: #444444;
+              border-collapse: collapse;
+              width: 560px;
+              max-width: 100%;
+            "
+            cellpadding="0"
+            cellspacing="0"
+            role="presentation"
+          >
+            <!-- Logo -->
             <tr>
-              <td style="padding-right: 16px; vertical-align: top; width: 64px;">
-                <img src="assets/avatar.png" alt="Logo" width="56" height="56" style="border-radius: 4px; display: block;" />
+              <td style="padding: 0 0 12px 0;">
+                <a href="https://acme.example" style="text-decoration: none;">
+                  <img
+                    src="assets/logo.png"
+                    alt="Acme Co."
+                    width="160"
+                    height="40"
+                    style="display: block; border: 0;"
+                  />
+                </a>
               </td>
-              <td style="vertical-align: top; border-left: 3px solid #0078D4; padding-left: 16px;">
-                <div style="font-size: 15px; font-weight: bold; color: #111111; margin-bottom: 2px;">Jane Smith</div>
-                <div style="font-size: 12px; color: #555555; margin-bottom: 8px;">Senior Account Executive · Acme Corp</div>
-                <div style="font-size: 12px; line-height: 1.8; color: #444444;">
-                  <span>📞</span> <a href="tel:+15550001234" style="color: #0078D4; text-decoration: none;">+1 555 000 1234</a><br/>
-                  <span>✉️</span> <a href="mailto:jane@acme.com" style="color: #0078D4; text-decoration: none;">jane@acme.com</a><br/>
-                  <span>🌐</span> <a href="https://acme.com" style="color: #0078D4; text-decoration: none;">acme.com</a>
+            </tr>
+
+            <!-- Company details -->
+            <tr>
+              <td style="border-left: 3px solid #0B5CAD; padding: 2px 0 2px 12px; line-height: 1.7;">
+                <div style="font-size: 14px; font-weight: bold; color: #14213D;">Acme Co. Ltd</div>
+                <div>12 High Street, Exampleton, EX1 2MP</div>
+                <div>
+                  <a href="tel:+441234567890" style="color: #0B5CAD; text-decoration: none;">+44 1234 567 890</a>
+                  &nbsp;·&nbsp;
+                  <a href="https://acme.example" style="color: #0B5CAD; text-decoration: none;">acme.example</a>
                 </div>
-                <div style="margin-top: 8px;">
-                  <img src="assets/linkedin.png" alt="LinkedIn" width="18" height="18" style="vertical-align: middle;" />
+                <!-- Social links -->
+                <div>
+                  <a href="https://www.linkedin.com/company/acme" style="color: #0B5CAD; text-decoration: none;">LinkedIn</a>
+                  &nbsp;·&nbsp;
+                  <a href="https://www.instagram.com/acme" style="color: #0B5CAD; text-decoration: none;">Instagram</a>
+                  &nbsp;·&nbsp;
+                  <a href="https://www.facebook.com/acme" style="color: #0B5CAD; text-decoration: none;">Facebook</a>
                 </div>
               </td>
             </tr>
+
+            <!-- Optional: seasonal / campaign banner. Swap the image and link per campaign, or delete this row. -->
             <tr>
-              <td colspan="2" style="padding-top: 12px;">
-                <div style="font-size: 10px; color: #999999; border-top: 1px solid #eeeeee; padding-top: 8px;">This email and any attachments are confidential. If you are not the intended recipient, please notify the sender and delete this message.</div>
+              <td style="padding: 14px 0 0 0;">
+                <a href="https://acme.example/sale" style="text-decoration: none;">
+                  <img
+                    src="assets/banner.png"
+                    alt="Winter sale: 20% off everything until 31 January. Shop now."
+                    width="560"
+                    height="100"
+                    style="display: block; border: 0; max-width: 100%; height: auto;"
+                  />
+                </a>
+              </td>
+            </tr>
+
+            <!-- Disclaimer -->
+            <tr>
+              <td style="padding-top: 12px;">
+                <div style="font-size: 10px; line-height: 1.5; color: #999999; border-top: 1px solid #eeeeee; padding-top: 8px;">
+                  Acme Co. Ltd is registered in England and Wales, company no. 01234567. This email and any attachments are confidential. If you are not the intended recipient, please notify the sender and delete this message.
+                </div>
               </td>
             </tr>
           </table>
         </div>
-        <p class="preview-caption">This is the sample <code>signature.html</code> from the repo. Replace it with your own details before you deploy.</p>
+        <p class="preview-caption">The block below the dashed line is the sample <code>signature.html</code> from the repo. Replace the logo, details, banner and disclaimer with your own before you deploy.</p>
       </div>
     </section>
 
@@ -178,7 +253,7 @@
         <table class="files">
           <tr><td><code>manifest.xml</code></td><td>The add-in manifest. You sideload it into Outlook.</td></tr>
           <tr><td><code>commands.js</code></td><td>The event handler that fetches and inserts the signature.</td></tr>
-          <tr><td><code>signature.html</code></td><td>The HTML signature fragment. Edit this to change everyone's signature.</td></tr>
+          <tr><td><code>signature.html</code></td><td>The company sign-off block. Edit this to change it for everyone.</td></tr>
           <tr><td><code>_headers</code></td><td>CORS headers so Outlook can fetch the files.</td></tr>
           <tr><td><code>skills/</code></td><td>Notes for extending the POC: per-user signatures, templating and caching.</td></tr>
         </table>
@@ -190,7 +265,7 @@
         <h2>Get started</h2>
         <ol class="steps">
           <li>Fork or clone the repository.</li>
-          <li>Edit <code>signature.html</code> with your name, title, contact details and logo.</li>
+          <li>Edit <code>signature.html</code> with your company logo, name, address, website, social links and disclaimer. Add a campaign banner if you want one.</li>
           <li>Deploy the repo as a static site. The guide uses Cloudflare Pages on the free plan.</li>
           <li>Replace the <code>YOUR_DOMAIN</code> placeholders in <code>manifest.xml</code> and <code>commands.js</code>, and give the manifest a fresh GUID.</li>
           <li>In Outlook, go to <strong>Insert → Add-ins → My Add-ins → Add a Custom Add-in → Add from File</strong> and pick your <code>manifest.xml</code>.</li>
@@ -202,7 +277,7 @@
     <section>
       <div class="wrap">
         <h2>Is DIY right for you?</h2>
-        <p>This is the DIY end of the spectrum: one signature for everyone, nothing to run, and it's yours once you fork it. If you need per-user signatures, an admin dashboard or central deployment, have a look at a commercial platform such as <a href="https://sighq.app">SigHQ</a> to see what that space looks like.</p>
+        <p>This is the DIY end of the spectrum: one sign-off block for the whole team, nothing to run, and it's yours once you fork it. If you need different signatures per person or department, an admin dashboard or central deployment, have a look at a commercial platform such as <a href="https://sighq.app">SigHQ</a> to see what that space looks like.</p>
       </div>
     </section>
   </main>

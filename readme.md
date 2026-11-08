@@ -23,15 +23,21 @@ Signature content is served from Cloudflare Pages, meaning it can be updated wit
 ## Repo Structure
 
 ```
-├── manifest.xml       # Add-in manifest — sideloaded locally into Outlook
-├── commands.js        # Event handler — hosted on Cloudflare Pages
-├── signature.html     # Company sign-off block — hosted on Cloudflare Pages
-├── assets/            # Logo and campaign banner used by signature.html
-├── _headers           # Cloudflare Pages CORS header config
-├── index.html         # One-page project site (for GitHub Pages)
-├── .nojekyll          # Serve files as-is on GitHub Pages
-└── README.md
+Add-in (what you deploy)
+├── manifest.xml       # Add-in manifest — sideloaded into Outlook
+├── commands.html      # Hidden runtime page that loads Office.js and commands.js
+├── commands.js        # Event handler that fetches and inserts the sign-off
+├── signature.html     # Company sign-off block — edit this to change it for everyone
+├── assets/            # Add-in icons, logo and campaign banner
+└── _headers           # Cloudflare Pages CORS header config
+
+Everything else (not needed to deploy)
+├── docs/              # Project website, published with GitHub Pages
+├── skills/            # Notes for extending the POC (per-user signatures, templating, caching)
+└── readme.md
 ```
+
+Only the top group is needed to run the add-in. `docs/` is the project's own website, and you can delete it from your fork.
 
 -----
 

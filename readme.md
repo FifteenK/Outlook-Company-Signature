@@ -1,4 +1,4 @@
-# Outlook Auto Signature Add-in POC
+# Outlook Company Signature
 
 An event-based Office.js add-in that automatically adds a remotely-managed company sign-off block whenever a user opens a new compose window in Outlook. No task pane, no user interaction — it just works silently in the background.
 
